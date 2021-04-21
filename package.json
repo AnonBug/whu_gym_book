@@ -1,0 +1,15 @@
+{
+  "name": "badminton_book",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "get-pixels": "^3.3.2",
+    "images": "^3.2.3",
+    "moment": "^2.29.1",
+    "node-schedule": "^2.0.0",
+    "nodemailer": "^6.5.0",
+    "puppeteer": "^8.0.0",
+    "resemblejs": "^3.2.5"
+  }
+}
