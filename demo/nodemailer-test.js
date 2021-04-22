@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-04-21 00:03:48
- * @LastEditTime: 2021-04-21 00:12:02
+ * @LastEditTime: 2021-04-22 20:46:07
  */
 
 
@@ -11,15 +11,17 @@
 const nodemailer = require('nodemailer');
 const moment = require('moment');
 
-nodemailer.createTestAccount((err, account) => {
+// nodemailer.createTestAccount((err, account) => {
     // 填入自己的账号和密码
     let transporter = nodemailer.createTransport({
-        host: 'localhost',
-        port: 8085,
-        secure: true, // 如果是 true 则port填写465, 如果 false 则可以填写其它端口号
+        service: 'QQ',
+        // port: 465,
+        // secure: true, // 如果是 true 则port填写465, 如果 false 则可以填写其它端口号
         auth: {
-            user: "1931260101@qq.com", // 发件人邮箱
-            pass: "qqhalf_bug1S" // 发件人密码(用自己的...)
+            user: "1248758606@qq.com", // 发件人邮箱
+            pass: "dxsbhmqooqezbace" // 发件人密码(用自己的...)
+            // user:account.user,
+            // pass:account.pass
         }
     });
 
@@ -28,7 +30,7 @@ nodemailer.createTestAccount((err, account) => {
     // 填写发件人, 收件人
     let mailOptions = {
         // 发件人地址
-        from: '1931260101@qq.com',
+        from: '"窝自己" <yuchun_zhao@qq.com>',
         // 收件人列表, 向163邮箱, gmail邮箱, qq邮箱各发一封
         to: 'yuchun_zhao@whu.edu.cn',
         // 邮件主题
@@ -56,4 +58,4 @@ nodemailer.createTestAccount((err, account) => {
         }
         console.log("邮件发送成功~");
     });
-});
+// });
