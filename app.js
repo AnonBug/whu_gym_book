@@ -2,13 +2,16 @@
  * @Author: zyc
  * @Description: 写脚本程序自动启动珞珈体育预定页面，并选择场地
  * @Date: 2021-04-17 10:32:30
- * @LastEditTime: 2021-04-22 21:24:20
+ * @LastEditTime: 2021-04-23 14:18:37
  */
 
 // 1. 引包
 const puppeteer = require('puppeteer');
 const schedule = require('node-schedule');
-const {cookie, gyms} = require('./config')
+const {
+    cookie,
+    gyms
+} = require('./config')
 const {
     sendMail
 } = require('./utils/mail');
@@ -158,13 +161,11 @@ const bookBadminton = async () => {
 
 // 让任务定时执行，每天 18：00 执行一遍程序
 const rule = new schedule.RecurrenceRule()
-rule.hour = 21
-rule.minute = 15
+rule.hour = 18
+rule.minute = 0
 // rule.second = 30
 
-// 设一个全局变量，
-let startTime;
-schedule.scheduleJob(rule, async () => {
+const job = async () => {
     console.log(`任务执行了，当前时间为 ${moment().format('MMMM Do YYYY, h:mm:ss a')}`);
     let status = await bookBadminton()
     console.log(`任务执行结束，预定状态为 ${status}`);
@@ -172,7 +173,10 @@ schedule.scheduleJob(rule, async () => {
     const content = {}
     content.subject = status ? '预定成功！' : '预约失败……'
     sendMail(content)
-});
+}
+// 设一个全局变量
+let startTime;
+schedule.scheduleJob(rule, job);
 
 console.log(`预定任务开始监听`);
-bookBadminton()
+// bookBadminton()
