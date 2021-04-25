@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: 写脚本程序自动启动珞珈体育预定页面，并选择场地
  * @Date: 2021-04-17 10:32:30
- * @LastEditTime: 2021-04-23 14:18:37
+ * @LastEditTime: 2021-04-25 19:24:03
  */
 
 // 1. 引包
@@ -65,6 +65,10 @@ const bookInGym = async (gym, browser) => {
                 name: 'JSESSIONID',
                 value: cookie.JSESSIONID,
                 domain: 'gym.whu.edu.cn'
+            }, {
+                name: 'iPlanetDirectoryPro',
+                value: cookie.iPlanetDirectoryPro,
+                domain: '.whu.edu.cn'
             }]
 
             await page.setCookie(...cookies)
@@ -147,7 +151,7 @@ const bookBadminton = async () => {
             status = await bookInGym(gyms[idx++], browser)
         }
         // 退出浏览器
-        // await browser.close()
+        await browser.close()
         // 返回预定状态
         return status
     } catch (e) {
@@ -179,4 +183,39 @@ let startTime;
 schedule.scheduleJob(rule, job);
 
 console.log(`预定任务开始监听`);
-// bookBadminton()
+// job()
+
+const loginTest = async () => {
+    // 创建浏览器窗口
+    const browser = await puppeteer.launch({
+        headless: false, // 有界面模式，可以查看执行详情
+        devtools: true,
+        defaultViewport: {
+            width: 1200,
+            height: 800
+        }
+    });
+
+    // 创建标签页
+    let page = await browser.newPage();
+
+    // 使用 cookie 的方式，避免登录验证
+    const cookies = [{
+        name: 'JSESSIONID',
+        value: cookie.JSESSIONID,
+        domain: 'gym.whu.edu.cn'
+    }, {
+        name: 'iPlanetDirectoryPro',
+        value: '37S1FW4ob6MmShiiRgGfVB',
+        domain: '.whu.edu.cn'
+    }]
+
+    await page.setCookie(...cookies)
+
+    // 认证机制
+    // await page.goto(`https://cas.whu.edu.cn/authserver/login?service=http://gym.whu.edu.cn:80/wechat/autoLoginConnector.jsp`)
+    // 首页
+    await page.goto(`http://gym.whu.edu.cn/wechat/booking/gymHome.jsp?ggId=${1}`)
+}
+
+job()
