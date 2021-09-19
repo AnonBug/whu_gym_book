@@ -1,8 +1,14 @@
 /*
+ * @Description: contents
+ * @Author: zyc
+ * @Date: 2021-09-19 08:11:21
+ * @LastEditTime: 2021-09-19 08:11:21
+ */
+/*
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-04 21:50:52
- * @LastEditTime: 2021-05-04 22:52:31
+ * @LastEditTime: 2021-09-19 08:08:14
  */
 const fs = require('fs')
 const canvas = require('canvas')
@@ -10,7 +16,6 @@ const cv = require('opencv4nodejs')
 
 const createPng = function (mat, filename) {
     try {
-
         // 创建输出任务
         const out = fs.createWriteStream('../test/dist/' + filename)
         // 从 mat 获取像素数据

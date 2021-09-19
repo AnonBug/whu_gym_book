@@ -3,7 +3,7 @@
  * @Description: 本滑块验证码破解方案全程参考自以下博客 
  *                  https://blog.csdn.net/weixin_44549063/article/details/112193218
  * @Date: 2021-04-25 19:43:48
- * @LastEditTime: 2021-05-05 14:44:50
+ * @LastEditTime: 2021-09-19 08:10:55
  */
 const cv = require('opencv4nodejs')
 

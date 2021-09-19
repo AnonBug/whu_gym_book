@@ -2,14 +2,16 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-04-22 21:02:29
- * @LastEditTime: 2021-04-22 21:05:17
+ * @LastEditTime: 2021-09-19 08:09:41
  */
 const nodemailer = require('nodemailer');
+const {mail_auth, mail_name} = require('../../config')
+
 const transporter = nodemailer.createTransport({
     service: 'QQ',
     auth: {
-        user: "1248758606@qq.com", // 发件人邮箱
-        pass: "dxsbhmqooqezbace" // 发件人密码(用自己的...)
+        user: mail_name, // 发件人邮箱
+        pass: mail_auth, // 发件人密码(用自己的...)
     }
 });
 

@@ -36,4 +36,3 @@ const getMoveTrack = distance => {
 module.exports = {
     getMoveTrack
 }
-
