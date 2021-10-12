@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:41:17
- * @LastEditTime: 2021-10-12 12:06:17
+ * @LastEditTime: 2021-10-12 12:15:11
  */
 
 const puppeteer = require('puppeteer');
@@ -84,4 +84,5 @@ async function singleWork() {
   }
 }
 
-singleWork();
+// TEST 测试预约逻辑
+// singleWork();

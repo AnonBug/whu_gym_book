@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:35:38
- * @LastEditTime: 2021-10-12 12:06:56
+ * @LastEditTime: 2021-10-12 12:15:03
  */
 const puppeteer = require("puppeteer");
 const {
@@ -72,8 +72,8 @@ const pageToTarget = (page, gym) => {
       );
 
       // 点击下一天
-      // const afterDay = await page.$("#afterDay");
-      // await afterDay.click();
+      const afterDay = await page.$("#afterDay");
+      await afterDay.click();
 
       // 如果是工体部，需要修改球类信息
       if (gym === 4) {
