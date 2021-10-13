@@ -1,0 +1,26 @@
+#root {
+  height: 100%;
+  width: 100%;
+}
+.App {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px 40px 20px;
+}
+
+.form {
+  flex: 1;
+}
+
+.tips {
+  height: 50px;
+}
+
+.license {
+  text-align: center;
+  color: gray;
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+}
