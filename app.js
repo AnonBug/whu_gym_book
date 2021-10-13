@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:41:17
- * @LastEditTime: 2021-10-12 12:15:11
+ * @LastEditTime: 2021-10-13 09:22:19
  */
 
 const puppeteer = require('puppeteer');
@@ -17,7 +17,7 @@ const { login, bookByGym } = require('./src/pupputeer');
   卓尔：10
   信部西区：11
 */
-const GYMS = [1, 11, 10, 2, 4];
+const GYMS = [10, 4, 2, 1, 11];
 
 /* 主线程任务 */
 const main = () => {
@@ -25,7 +25,7 @@ const main = () => {
     // 创建浏览器窗口
     const browser = await puppeteer.launch({
       headless: false, // 有界面模式，可以查看执行详情
-      devtools: false,
+      devtools: true,
       defaultViewport: {
         width: 1200,
         height: 800,
@@ -49,7 +49,7 @@ const main = () => {
       }
 
       // 退出浏览器
-      await browser.close();
+      // await browser.close();
 
       // 返回预定状态
       resolve(status);
@@ -85,4 +85,4 @@ async function singleWork() {
 }
 
 // TEST 测试预约逻辑
-// singleWork();
+singleWork();

@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:35:38
- * @LastEditTime: 2021-10-12 12:15:03
+ * @LastEditTime: 2021-10-13 09:33:43
  */
 const puppeteer = require("puppeteer");
 const {
@@ -29,7 +29,7 @@ const selectSiteByTime = (lis, start, end) => {
   const startIdx = (21 - start) / 0.5; 
 
   // 开放的时间段不足以覆盖所需时间，直接返回 false
-  if (count < startIdx + 1) return false;
+  if (count < startIdx) return false;
   
   // 循环场地（后期可考虑支持指定场地号检索）
   for (let i = lis.length - 1; i >= 0; i--) {
@@ -38,7 +38,7 @@ const selectSiteByTime = (lis, start, end) => {
 
     // 判断该场地是否满足时间段要求
     let flag = true;
-    for (let j = count - 1 - endIdx; j >= count - 1 - startIdx; j--) {
+    for (let j = count - 1 - endIdx; j >= count - startIdx; j--) {
       if (items[j].className !== "statusImage_select") {
         flag = false;
         break;
@@ -47,7 +47,7 @@ const selectSiteByTime = (lis, start, end) => {
 
     // 如果满足要求，进行点击操作
     if (flag) {
-      for (let k = count - 1 - endIdx; k >= count - 1 - startIdx; k--) {
+      for (let k = count - 1 - endIdx; k >= count - startIdx; k--) {
         items[k].click();
       }
       return true;
@@ -86,6 +86,7 @@ const pageToTarget = (page, gym) => {
           select.dispatchEvent(changeEvent);
         });
       }
+
       resolve();
     } catch (e) {
       console.log("报错了", e);
