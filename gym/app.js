@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:41:17
- * @LastEditTime: 2021-10-13 18:38:44
+ * @LastEditTime: 2021-10-14 11:49:07
  */
 
 const puppeteer = require('puppeteer');
@@ -13,7 +13,7 @@ const { login, bookByGym } = require('./src/pupputeer');
 const { GYMS } = require('./config');
 
 /* 主线程任务 */
-const main = () => {
+const main = ({username, password, gyms, time, email, day}) => {
   return new Promise(async (resolve, reject) => {
     // 创建浏览器窗口
     const browser = await puppeteer.launch({
@@ -32,15 +32,15 @@ const main = () => {
     page.setDefaultNavigationTimeout(0);
     
     try {
-      await login(page); // 登录
+      await login(page, username, password); // 登录
       await page.waitForTimeout(2000); // 等待登录完成
       
       // 循环需要预定的球场
       let status = false;
       let cur = 0;
-      while (!status && cur < GYMS.length) {
+      while (!status && cur < gyms.length) {
         // 预定场地
-        status = await bookByGym(page, GYMS[cur], cur === 0);
+        status = await bookByGym(page, gyms[cur], cur === 0, time, day);
         cur++;
       }
 
@@ -57,20 +57,12 @@ const main = () => {
   })
 }
 
-// 让任务定时执行，每天 18：00 执行一遍程序
-const rule = new schedule.RecurrenceRule();
-rule.hour = 17;
-rule.minute = 59;
-rule.second = 50;
 
-schedule.scheduleJob(rule, async function () {
-  singleWork();
-});
 
-async function singleWork() {
+async function singleWork(args) {
   return new Promise(async (resolve, reject) => {
     console.log(`任务执行了，当前时间为 ${new Date()}`);
-    let status = await main();
+    let status = await main(args);
     console.log(`任务执行结束，预定状态为 ${status}`);
   
     // 根据预约状态，发送邮件
@@ -84,9 +76,24 @@ async function singleWork() {
   })
 }
 
+const scheduleWork = (args) => {
+  // 让任务定时执行，每天 18：00 执行一遍程序
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = 11;
+  rule.minute = 01;
+  rule.second = 00;
+
+  return new Promise(async (resolve, reject) => {
+    schedule.scheduleJob(rule, async function () {
+      resolve(await singleWork(args));
+    });
+  })
+}
+
 // TEST 测试预约逻辑
 // singleWork();
 
 module.exports = {
   singleWork,
+  scheduleWork,
 }

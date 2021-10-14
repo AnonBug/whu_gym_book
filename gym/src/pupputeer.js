@@ -2,17 +2,9 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:35:38
- * @LastEditTime: 2021-10-13 17:35:01
+ * @LastEditTime: 2021-10-14 11:39:47
  */
 const puppeteer = require("puppeteer");
-const {
-  username,
-  password,
-  start_time,
-  end_time,
-} = require('../config');
-
-console.log(`您正在预约时间段为 ${start_time} - ${end_time} 的 场地`);
 
 /**
  * @description: 根据指定时间段，点击对应的 lis 元素
@@ -21,7 +13,7 @@ console.log(`您正在预约时间段为 ${start_time} - ${end_time} 的 场地`
  * @param {Number} end 结束时间，同上
  * @return {Boolean} 是否有满足条件的场地
  */
-const selectSiteByTime = (lis, start, end) => {
+const selectSiteByTime = (lis, [start, end]) => {
   // 开放的时间段数量
   const count = lis[0].querySelectorAll("div").length;
   // 考虑到可能有早上不开放的场景，自后向前算索引
@@ -63,7 +55,7 @@ const selectSiteByTime = (lis, start, end) => {
  * @param {Number} gym 体育场
  * @return {*}
  */
-const pageToTarget = (page, gym) => {
+const pageToTarget = (page, gym, day) => {
   return new Promise(async (resolve, reject) => {
     try {
       // 跳到指定球场
@@ -71,9 +63,11 @@ const pageToTarget = (page, gym) => {
         `http://gym.whu.edu.cn/wechat/booking/gymHome.jsp?ggId=${gym}`
       );
 
-      // 点击下一天
-      const afterDay = await page.$("#afterDay");
-      await afterDay.click();
+      if (day !== 1) {
+        // 点击下一天
+        const afterDay = await page.$("#afterDay");
+        await afterDay.click();
+      }
 
       // 如果是工体部，需要修改球类信息
       if (gym === 4) {
@@ -102,7 +96,7 @@ const pageToTarget = (page, gym) => {
  * @param {puppeteer.Page} page 页面容器
  * @return {*}
  */
-const login = (page) => {
+const login = (page, username, password) => {
   return new Promise(async (resolve, reject) => {
     try {
       await page.goto(
@@ -127,10 +121,10 @@ const login = (page) => {
  * @param {puppeteer.Page} page 标签页对象
  * @return {promise}
  */
-const bookByGym = async (page, gym, waitFlag) => {
+const bookByGym = async (page, gym, waitFlag, time, day) => {
   return new Promise(async (resolve, reject) => {
     try {
-      await pageToTarget(page, gym);
+      await pageToTarget(page, gym, day);
 
       let statusSlider = await page.$(`#statusSlider`);
 
@@ -140,7 +134,7 @@ const bookByGym = async (page, gym, waitFlag) => {
       while (Date.now() - begin < duration && !statusSlider) {
         // 重新加载页面
         await page.reload();
-        await pageToTarget(page, gym);
+        await pageToTarget(page, gym, day);
         statusSlider = await page.$(`#statusSlider`);
       }
 
@@ -151,12 +145,12 @@ const bookByGym = async (page, gym, waitFlag) => {
       if (waitFlag) {
         await page.waitForTimeout(2000);
         await page.reload();
-        await pageToTarget(page, gym)
+        await pageToTarget(page, gym, day);
         statusSlider = await page.$(`#statusSlider`);
       }
 
       // 预定场地
-      const bookStatus = await statusSlider.$$eval(`li`, selectSiteByTime, start_time, end_time);
+      const bookStatus = await statusSlider.$$eval(`li`, selectSiteByTime, time);
 
       if (bookStatus) {
         // 点击提交按钮
