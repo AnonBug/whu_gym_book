@@ -3,54 +3,78 @@
  * @Description: contents
  * @Author: zyc
  * @Date: 2021-10-13 19:00:25
- * @LastEditTime: 2021-10-13 21:26:00
+ * @LastEditTime: 2021-10-14 11:50:57
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import "./App.css";
-import { Form, Input, Button, Checkbox, Select, TimePicker } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Select,
+  TimePicker,
+  message,
+  Radio,
+} from "antd";
 import "antd/dist/antd.css";
+import moment from "moment";
 
 const { Option } = Select;
 
-// eslint-disable-next-line no-undef
-console.log(ipcRenderer);
-
-ipcRenderer.invoke('getStoreValue', 'unicorn')
-  .then(res => {
-    console.log(res);
-  })
-
 function App() {
-  const [state, setState] = useState({
-    username: '',
-    password: '',
-    email: '',
-    gyms: [],
-    time: [],
-    remember: false,
-  })
-  useEffect(() => {
-    // eslint-disable-next-line
-    setState(s => ({...state, username: 'zyc'}));
-    // eslint-disable-next-line
-  }, [])
+  const state = localStorage.getItem("info")
+    ? JSON.parse(localStorage.getItem("info"))
+    : {
+        username: "",
+        password: "",
+        gyms: [],
+        time: [],
+        email: "",
+        remember: false,
+        day: 1,
+      };
+
+  state.time = state.time.map((item) => {
+    const remainder = item % 1;
+    item = item - remainder;
+    let timeStr = "" + item + (remainder ? ":30" : ":00");
+
+    return moment(timeStr, "HH:mm");
+  });
+
+  console.log("state", state);
+
   // 完成的按钮
   const onFinish = (values) => {
     console.log("Success:", values);
-
-    const time = values.time.map(moment => {
+    values.time = values.time.map((moment) => {
       let num = moment.hour();
       if (moment.minute() === 30) {
         num += 0.5;
       }
 
       return num;
-    })
-
-    ipcRenderer.invoke("gym-book", {...values, time}).then((res) => {
-      console.log(res ? "订场成功" : "订场失败");
     });
+
+    // 更新内容
+    if (values.remember) {
+      localStorage.setItem("info", JSON.stringify(values));
+    }
+
+    if (values.day !== 3) {
+      ipcRenderer.invoke("gym-book-now", values).then((res) => {
+        if (res) {
+          message.success("订场成功！请速去付款~");
+        } else {
+          message.error("八好意思，订场失败……");
+        }
+      });
+    } else {
+      message.info("系统将在 18：00 开抢，请勿关闭客户端。")
+      ipcRenderer.send("gym-book-wait", values);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -64,7 +88,7 @@ function App() {
         className="form"
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 18 }}
-        initialValues={{ remember: true }}
+        initialValues={{ ...state }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -74,9 +98,7 @@ function App() {
           name="username"
           rules={[{ required: true, message: "学号！学号啊！" }]}
         >
-          <Input placeholder="登录预定系统的用户名，通常为学号" 
-            value={state.username}
-          />
+          <Input placeholder="登录预定系统的用户名，通常为学号" />
         </Form.Item>
 
         <Form.Item
@@ -120,7 +142,7 @@ function App() {
           <TimePicker.RangePicker
             minuteStep={30}
             format="HH:mm"
-            placeholder={['开始时间', '结束时间']}
+            placeholder={["开始时间", "结束时间"]}
             disabledHours={() => {
               const res = [];
               for (let i = 0; i < 24; i++) {
@@ -142,7 +164,22 @@ function App() {
           name="email"
           rules={[{ required: true, message: "你猜我会不会千里传音？" }]}
         >
-          <Input placeholder="接收预定结果，通常只有成功时才会发消息" />
+          <Input
+            placeholder="接收预定结果，通常只有成功时才会发消息"
+            defaultValue={state.email}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="日期"
+          name="day"
+          rules={[{ required: true, message: "你猜我会不会千里传音？" }]}
+        >
+          <Radio.Group defaultValue={1}>
+            <Radio value={1}>立抢今日</Radio>
+            <Radio value={2}>立抢明日</Radio>
+            <Radio value={3}>预约明日</Radio>
+          </Radio.Group>
         </Form.Item>
 
         <Form.Item
@@ -162,13 +199,15 @@ function App() {
 
       <div className="tips">
         <h3>说明：</h3>
-        <p>本系统为佛系杯抢场使用，请勿商用。@anonbug</p>
+        <p>本系统为佛系杯抢场使用，请勿商用。</p>
         <ul>
           <li>需为校园网，或 vpn 环境</li>
-          <li>可连续监控，也可执行单次</li>
+          <li className="highlight">选择预约明日时，系统会在18：00开抢，请勿关闭客户端</li>
         </ul>
       </div>
-      <div className="license">drived by electron + puppeteer + react @anonbug</div>
+      <div className="license">
+        drived by electron + puppeteer + react @anonbug
+      </div>
     </div>
   );
 }

@@ -17,6 +17,10 @@
   height: 50px;
 }
 
+.tips .highlight {
+  color: red;
+}
+
 .license {
   text-align: center;
   color: gray;
