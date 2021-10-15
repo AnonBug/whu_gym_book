@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-04-22 21:02:29
- * @LastEditTime: 2021-10-12 12:03:29
+ * @LastEditTime: 2021-10-15 09:52:06
  */
 const nodemailer = require('nodemailer');
 const { mail_auth, mail_name, target_addr } = require('../config');
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // 发送邮件
-const sendMail = ({ subject = '预定成功', text } = {}) => {
+const sendMail = ({ subject = '预定成功', text, target_addr } = {}) => {
   // 配置地址：https://nodemailer.com/message/
   let mailOptions = {
     from: '"子虫" <yuchun_zhao@qq.com>', // 发件人地址

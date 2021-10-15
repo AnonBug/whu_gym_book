@@ -2,19 +2,12 @@
  * @Description: contents
  * @Author: zyc
  * @Date: 2021-10-13 10:27:40
- * @LastEditTime: 2021-10-14 12:09:33
+ * @LastEditTime: 2021-10-15 09:53:52
  */
 
 const { app, BrowserWindow, ipcMain } = require('electron')
-const Store = require('electron-store');
 const path = require('path');
 const schedule = require('node-schedule');
-const url = require('url');
-
-const store = new Store();
-
-// store.set('unicorn', '🦄');
-console.log(store.get('unicorn'));
 
 // 订场任务
 const { singleWork } = require('./gym/app');
@@ -29,7 +22,11 @@ const createWindow = () => {
   })
 
   // win.loadFile('./ui/build/index.html');
-  win.loadURL('http://anonbug.github.io/gym-book')
+  // 线上版
+  // win.loadURL('https://anonbug.github.io/whu_gym_book/')
+
+  // 本地版
+  win.loadURL('http://localhost:3000');
 }
 
 app.whenReady().then(() => {
@@ -61,8 +58,4 @@ ipcMain.on('gym-book-wait', async (event, args) => {
   schedule.scheduleJob(rule, async function () {
     event.reply('gym-book-wait-res', await singleWork(args));
   });
-})
-
-ipcMain.handle('getStoreValue', (event, key) => {
-  return store.get(key);
 })

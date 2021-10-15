@@ -17,8 +17,16 @@
   height: 50px;
 }
 
+.tips h4 {
+  font-weight: 700;
+}
+
 .tips .highlight {
   color: red;
+}
+
+.tips ul li:last-child {
+  font-weight: 700;
 }
 
 .license {

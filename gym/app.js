@@ -2,22 +2,19 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:41:17
- * @LastEditTime: 2021-10-14 11:49:07
+ * @LastEditTime: 2021-10-15 09:54:48
  */
 
 const puppeteer = require('puppeteer');
-const schedule = require('node-schedule');
 const { sendMail } = require('./src/mail');
 const { login, bookByGym } = require('./src/pupputeer');
-
-const { GYMS } = require('./config');
 
 /* 主线程任务 */
 const main = ({username, password, gyms, time, email, day}) => {
   return new Promise(async (resolve, reject) => {
     // 创建浏览器窗口
     const browser = await puppeteer.launch({
-      headless: false, // 有界面模式，可以查看执行详情
+      headless: true, // 有界面模式，可以查看执行详情
       devtools: false,
       defaultViewport: {
         width: 1200,
@@ -57,8 +54,6 @@ const main = ({username, password, gyms, time, email, day}) => {
   })
 }
 
-
-
 async function singleWork(args) {
   return new Promise(async (resolve, reject) => {
     console.log(`任务执行了，当前时间为 ${new Date()}`);
@@ -69,24 +64,11 @@ async function singleWork(args) {
     if (status) {
       sendMail({
         subject: '预定成功!',
+        target_addr: args.email,
       })
     }
 
     resolve(status);
-  })
-}
-
-const scheduleWork = (args) => {
-  // 让任务定时执行，每天 18：00 执行一遍程序
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = 11;
-  rule.minute = 01;
-  rule.second = 00;
-
-  return new Promise(async (resolve, reject) => {
-    schedule.scheduleJob(rule, async function () {
-      resolve(await singleWork(args));
-    });
   })
 }
 
@@ -95,5 +77,4 @@ const scheduleWork = (args) => {
 
 module.exports = {
   singleWork,
-  scheduleWork,
 }
