@@ -2,10 +2,10 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-04-22 21:02:29
- * @LastEditTime: 2021-10-15 09:52:06
+ * @LastEditTime: 2021-10-19 13:07:06
  */
 const nodemailer = require('nodemailer');
-const { mail_auth, mail_name, target_addr } = require('../config');
+const { mail_auth, mail_name } = require('../config');
 
 const transporter = nodemailer.createTransport({
   service: 'QQ',
