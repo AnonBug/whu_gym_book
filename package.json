@@ -1,30 +1,28 @@
 {
-  "name": "whu_gym",
+  "name": "whu-gym",
   "version": "1.0.0",
-  "description": "学习electron",
   "main": "main.js",
-  "author": "anon_bug",
+  "author": "AnonBug <1248758606@qq.com>",
   "license": "MIT",
+  "description": "使用electron+puppeteer实现场地预定",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.61",
     "@electron-forge/maker-deb": "^6.0.0-beta.61",
     "@electron-forge/maker-rpm": "^6.0.0-beta.61",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
-    "electron": "^15.1.2"
-  },
-  "scripts": {
-    "start": "chcp 65001 && electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "electron": "^15.2.0"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.0.1",
     "node-schedule": "^2.0.0",
     "nodemailer": "^6.7.0",
-    "puppeteer": "^10.4.0",
-    "url": "^0.11.0"
+    "puppeteer": "^10.4.0"
   },
   "config": {
     "forge": {
@@ -33,7 +31,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "01_my_electron_app"
+            "name": "whu_gym"
           }
         },
         {

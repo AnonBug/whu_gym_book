@@ -3,7 +3,7 @@
  * @Description: contents
  * @Author: zyc
  * @Date: 2021-10-13 19:00:25
- * @LastEditTime: 2021-10-15 10:01:07
+ * @LastEditTime: 2021-10-19 11:26:40
  */
 import { useState } from 'react';
 import "./App.css";
@@ -84,7 +84,7 @@ function App() {
       });
     } else {
       // 拦截过期的预定
-      if (moment().hour() >= 9) {
+      if (moment().hour() >= 18) {
         return message.info("明日的预约系统已开放，如需预定，请选择【立抢明日】");
       }
 

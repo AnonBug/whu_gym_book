@@ -2,7 +2,7 @@
  * @Description: contents
  * @Author: zyc
  * @Date: 2021-10-13 10:27:40
- * @LastEditTime: 2021-10-15 09:53:52
+ * @LastEditTime: 2021-10-19 11:28:33
  */
 
 const { app, BrowserWindow, ipcMain } = require('electron')
@@ -23,10 +23,10 @@ const createWindow = () => {
 
   // win.loadFile('./ui/build/index.html');
   // 线上版
-  // win.loadURL('https://anonbug.github.io/whu_gym_book/')
+  win.loadURL('https://anonbug.github.io/whu_gym_book/')
 
   // 本地版
-  win.loadURL('http://localhost:3000');
+  // win.loadURL('http://localhost:3000');
 }
 
 app.whenReady().then(() => {

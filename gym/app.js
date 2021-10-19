@@ -2,7 +2,7 @@
  * @Author: zyc
  * @Description: file content
  * @Date: 2021-05-05 13:41:17
- * @LastEditTime: 2021-10-15 09:54:48
+ * @LastEditTime: 2021-10-18 17:24:32
  */
 
 const puppeteer = require('puppeteer');
@@ -14,7 +14,7 @@ const main = ({username, password, gyms, time, email, day}) => {
   return new Promise(async (resolve, reject) => {
     // 创建浏览器窗口
     const browser = await puppeteer.launch({
-      headless: true, // 有界面模式，可以查看执行详情
+      headless: false, // 有界面模式，可以查看执行详情
       devtools: false,
       defaultViewport: {
         width: 1200,
